@@ -3,4 +3,6 @@
     <string name="image_description">Описание вашего изображения</string>
     <string name="load_model">Load Model</string>
     <string name="unload_model">Unload Model</string>
+    <string name="Modelsss">Загрузить модель</string>
+    <string name="M">Удалить модель</string>
 </resources>
