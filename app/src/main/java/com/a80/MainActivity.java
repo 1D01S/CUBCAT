@@ -87,3 +87,4 @@ public class MainActivity extends AppCompatActivity {
         glSurfaceView.onResume();
     }
 }
+
