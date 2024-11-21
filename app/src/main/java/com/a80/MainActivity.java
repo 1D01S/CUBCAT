@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.Switch;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,7 +37,12 @@ public class MainActivity extends AppCompatActivity {
         loadModelButton.setOnClickListener(v -> openFileChooser());
 
         Button unloadModelButton = findViewById(R.id.unload_model_button);
-        unloadModelButton.setOnClickListener(v -> cubeRenderer.unloadModels()); // Разгрузка всех моделей
+        unloadModelButton.setOnClickListener(v -> glSurfaceView.queueEvent(cubeRenderer::unloadModels));
+
+        Switch wireframeSwitch = findViewById(R.id.wireframe_switch);
+        wireframeSwitch.setOnCheckedChangeListener((buttonView, isChecked) ->
+                glSurfaceView.queueEvent(() -> cubeRenderer.setWireframeMode(isChecked))
+        );
     }
 
     private void openFileChooser() {
@@ -62,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             InputStream objInputStream = getContentResolver().openInputStream(uri);
             if (objInputStream != null) {
                 glSurfaceView.queueEvent(() -> {
-                    cubeRenderer.loadModel(this, objInputStream);
+                    cubeRenderer.loadModel(objInputStream);
                     try {
                         objInputStream.close();
                     } catch (IOException e) {
@@ -87,4 +93,3 @@ public class MainActivity extends AppCompatActivity {
         glSurfaceView.onResume();
     }
 }
-

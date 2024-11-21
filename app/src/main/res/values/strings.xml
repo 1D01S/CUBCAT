@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_8.0">Ваше имя приложения</string>
+    <string name="app_8.0">CUBKOT</string>
     <string name="image_description">Описание вашего изображения</string>
     <string name="load_model">Load Model</string>
     <string name="unload_model">Unload Model</string>

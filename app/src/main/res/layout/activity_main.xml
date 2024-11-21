@@ -28,6 +28,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/gl_surface_view" />
 
+    <!-- Кнопка для сброса модели -->
     <Button
         android:id="@+id/unload_model_button"
         android:layout_width="wrap_content"
@@ -37,5 +38,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/load_model_button" />
+
+    <!-- Переключатель режима отображения сетки -->
+    <Switch
+        android:id="@+id/wireframe_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:text="Wireframe Mode"
+        app:layout_constraintBottom_toTopOf="@id/load_model_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/gl_surface_view"
+        app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -23,11 +23,10 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
     private final float[] projectionMatrix = new float[16];
     private final float[] viewMatrix = new float[16];
     private final float[] modelMatrix = new float[16];
+    private boolean wireframeMode = false;
 
     public CubeRenderer(TouchHandler touchHandler) {
         this.touchHandler = touchHandler;
-
-        // Добавляем куб как базовую модель
         models.add(createCube());
     }
 
@@ -35,10 +34,14 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
         return touchHandler;
     }
 
-    public void loadModel(MainActivity mainActivity, InputStream objInputStream) {
+    public void setWireframeMode(boolean wireframeMode) {
+        this.wireframeMode = wireframeMode;
+    }
+
+    public void loadModel(InputStream objInputStream) {
         try {
             Model model = parseObj(objInputStream);
-            models.clear(); // Заменяем текущие модели
+            models.clear();
             models.add(model);
             Log.d(TAG, "Model loaded successfully.");
         } catch (Exception e) {
@@ -48,7 +51,7 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
 
     public void unloadModels() {
         models.clear();
-        models.add(createCube()); // Сбрасываем к базовому кубу
+        models.add(createCube());
         Log.d(TAG, "All models unloaded.");
     }
 
@@ -56,7 +59,6 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         GLES20.glClearColor(0, 0, 0, 1);
         GLES20.glEnable(GLES20.GL_DEPTH_TEST);
-
         Matrix.setLookAtM(viewMatrix, 0, 0, 0, 20, 0, 0, 0, 0, 1, 0);
     }
 
@@ -75,7 +77,7 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
         Matrix.multiplyMM(mvpMatrix, 0, mvpMatrix, 0, modelMatrix, 0);
 
         for (Model model : models) {
-            model.draw(mvpMatrix);
+            model.draw(mvpMatrix, wireframeMode);
         }
     }
 
