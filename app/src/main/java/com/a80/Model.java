@@ -11,6 +11,8 @@ public class Model {
     private final FloatBuffer vertexBuffer;
     private final ShortBuffer indexBuffer;
     private final int indexCount;
+    private float width, height, depth;
+    private float positionX, positionY, positionZ;
 
     public Model(float[] vertices, short[] indices) {
         vertexBuffer = ByteBuffer.allocateDirect(vertices.length * 4)
@@ -55,32 +57,53 @@ public class Model {
         int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode);
         int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
 
-        // Создание программы и привязка шейдеров
+        // Создание программы
         int program = GLES20.glCreateProgram();
         GLES20.glAttachShader(program, vertexShader);
         GLES20.glAttachShader(program, fragmentShader);
         GLES20.glLinkProgram(program);
         GLES20.glUseProgram(program);
 
-        // Передача данных в шейдеры
+        // Передача матрицы и цвета
         int mvpMatrixHandle = GLES20.glGetUniformLocation(program, "uMVPMatrix");
-        int wireframeModeHandle = GLES20.glGetUniformLocation(program, "uWireframeMode");
+        int colorHandle = GLES20.glGetUniformLocation(program, "uColor");
         int positionHandle = GLES20.glGetAttribLocation(program, "vPosition");
 
         GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false, mvpMatrix, 0);
-        GLES20.glUniform1i(wireframeModeHandle, wireframeMode ? 1 : 0);
 
+        // Цвет для wireframe или стандартный
+        if (wireframeMode) {
+            GLES20.glLineWidth(6.0f); // Установить толщину линии
+            GLES20.glUniform4f(colorHandle, 1.0f, 1.0f, 1.0f, 1.0f); // Белый для wireframe
+        } else {
+            GLES20.glUniform4f(colorHandle, 0.2f, 0.5f, 1.0f, 1.0f); // Стандартный цвет
+        }
+
+        // Настройка вершин
         GLES20.glEnableVertexAttribArray(positionHandle);
         GLES20.glVertexAttribPointer(positionHandle, 3, GLES20.GL_FLOAT, false, 0, vertexBuffer);
 
-        // Выбор режима рисования
+        // Выбор режима
         if (wireframeMode) {
-            GLES20.glDrawElements(GLES20.GL_LINES, indexCount, GLES20.GL_UNSIGNED_SHORT, indexBuffer);
+            // Рисуем только линии
+            for (int i = 0; i < indexBuffer.limit(); i += 3) {
+                short a = indexBuffer.get(i);
+                short b = indexBuffer.get(i + 1);
+                short c = indexBuffer.get(i + 2);
+
+                short[] lineIndices = {a, b, b, c, c, a};
+                ShortBuffer lineBuffer = ByteBuffer.allocateDirect(lineIndices.length * 2)
+                        .order(ByteOrder.nativeOrder())
+                        .asShortBuffer();
+                lineBuffer.put(lineIndices).position(0);
+
+                GLES20.glDrawElements(GLES20.GL_LINES, lineIndices.length, GLES20.GL_UNSIGNED_SHORT, lineBuffer);
+            }
         } else {
+            // Рисуем треугольники
             GLES20.glDrawElements(GLES20.GL_TRIANGLES, indexCount, GLES20.GL_UNSIGNED_SHORT, indexBuffer);
         }
 
-        // Освобождение ресурсов
         GLES20.glDisableVertexAttribArray(positionHandle);
         GLES20.glDeleteProgram(program);
     }
