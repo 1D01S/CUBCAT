@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <!-- GLSurfaceView для рендеринга 3D-модели -->
+    <!-- GLSurfaceView используется для отображения 3D-моделей на экране устройства -->
     <android.opengl.GLSurfaceView
         android:id="@+id/gl_surface_view"
         android:layout_width="0dp"
@@ -16,7 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Кнопка для загрузки модели -->
+    <!-- Кнопка для загрузки 3D-модели -->
     <Button
         android:id="@+id/load_model_button"
         android:layout_width="wrap_content"
@@ -28,7 +28,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/gl_surface_view" />
 
-    <!-- Кнопка для сброса модели -->
+    <!-- Кнопка для выгрузки модели из 3D-вида -->
     <Button
         android:id="@+id/unload_model_button"
         android:layout_width="wrap_content"
@@ -39,7 +39,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/load_model_button" />
 
-    <!-- Переключатель режима отображения сетки -->
+    <!-- Переключатель для изменения режима отображения модели (сетка или сплошная) -->
     <Switch
         android:id="@+id/wireframe_switch"
         android:layout_width="wrap_content"
